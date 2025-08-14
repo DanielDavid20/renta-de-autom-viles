@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoRenta - Tu mejor opción en alquiler de vehículos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Capa del título y menú */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(45deg, #2980b9, #1f5f8b);
+        }
+
+        /* Estilos para el menú desplegable */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            z-index: 9999;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a {
+            color: #3498db !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            border-radius: 0;
+            margin: 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: linear-gradient(45deg, #3498db, #2980b9) !important;
+            color: white !important;
+            transform: none;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        /* Flecha del menú desplegable */
+        .dropdown::after {
+            content: '▼';
+            margin-left: 8px;
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.active::after {
+            transform: rotate(180deg);
+        }
+
+        /* Capa de contenido */
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-title {
+            color: #2c3e50;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            color: #34495e;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .feature-description {
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Capa del título y menú -->
+        <div class="header">
+            <h1 class="title">🚗 AutoRenta</h1>
+            <p class="subtitle">Tu mejor opción en alquiler de vehículos</p>
+                    <nav class="nav-menu">
+                        <a href="index.html">Inicio</a>
+                        <a href="autos.html">Nuestros Autos</a>
+                        <div class="dropdown">
+                            <a href="#" class="dropdown-toggle">Servicios</a>
+                            <div class="dropdown-content">
+                                <a href="mantenimiento.html">🔧 Mantenimiento</a>
+                                <a href="montallantas.html">🚗 Montallantas</a>
+                                <a href="alineacion.html">⚖️ Alineación</a>
+                            </div>
+                        </div>
+                        <a href="contacto.html">Contacto</a>
+                    </nav>
+        </div>
+
+        <!-- Capa de contenido -->
+        <div class="content">
+            <div class="welcome-section">
+                <h2 class="welcome-title">¡Bienvenido a AutoRenta!</h2>
+                <p class="welcome-text">
+                    Somos una empresa líder en el alquiler de vehículos, ofreciendo la mejor flota de automóviles 
+                    para satisfacer todas tus necesidades de transporte. Con años de experiencia en el mercado, 
+                    garantizamos un servicio de calidad, precios competitivos y la máxima seguridad en cada viaje.
+                </p>
+                <a href="autos.html" class="cta-button">Ver Nuestros Vehículos</a>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">Reserva Rápida</h3>
+                    <p class="feature-description">
+                        Reserva tu vehículo en minutos con nuestro sistema online simple y eficiente.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 class="feature-title">Seguridad Garantizada</h3>
+                    <p class="feature-description">
+                        Todos nuestros vehículos pasan rigurosas inspecciones de seguridad.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">Precios Justos</h3>
+                    <p class="feature-description">
+                        Ofrecemos las mejores tarifas del mercado sin costos ocultos.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Manejo del menú desplegable
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            
+            // Solo el botón "Servicios" abre/cierra el menú
+            dropdownToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdownContent.classList.toggle('show');
+                dropdown.classList.toggle('active');
+            });
+            
+            // Los enlaces del menú funcionan normalmente
+            const dropdownLinks = dropdownContent.querySelectorAll('a');
+            dropdownLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // No prevenir el comportamiento por defecto para que funcione la navegación
+                    dropdownContent.classList.remove('show');
+                    dropdown.classList.remove('active');
+                });
+            });
+            
+            // Cerrar menú al hacer click fuera
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdownContent.classList.remove('show');
+                    dropdown.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

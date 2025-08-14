@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestros Autos - AutoRenta</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Capa del título y menú */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(45deg, #2980b9, #1f5f8b);
+        }
+
+        /* Estilos para el menú desplegable */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            z-index: 9999;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            padding: 10px 0;
+        }
+
+        .dropdown-content a {
+            color: #3498db !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            border-radius: 0;
+            margin: 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: linear-gradient(45deg, #3498db, #2980b9) !important;
+            color: white !important;
+            transform: none;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        /* Flecha del menú desplegable */
+        .dropdown::after {
+            content: '▼';
+            margin-left: 8px;
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.active::after {
+            transform: rotate(180deg);
+        }
+
+        /* Capa de contenido */
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+        }
+
+        .page-description {
+            text-align: center;
+            color: #34495e;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* Galería de autos */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .car-item {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .car-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estilos para los detalles técnicos */
+        .car-details {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(52, 152, 219, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .car-details h4 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .car-details p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .car-details .specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .car-details .spec-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .car-details .spec-label {
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            opacity: 0.9;
+        }
+
+        .car-details .spec-value {
+            font-size: 1em;
+        }
+
+        /* Indicador de interactividad */
+        .car-item::before {
+            content: "👆 Pasa el mouse aquí";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .car-item:hover::before {
+            opacity: 1;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .car-item:hover .car-image {
+            transform: scale(1.05);
+        }
+
+        .car-info {
+            padding: 25px;
+        }
+
+        .car-name {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .car-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .car-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .feature-tag {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .car-price {
+            color: #e74c3c;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .rent-button {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .rent-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Capa del título y menú -->
+        <div class="header">
+            <h1 class="title">🚗 AutoRenta</h1>
+            <p class="subtitle">Tu mejor opción en alquiler de vehículos</p>
+            <nav class="nav-menu">
+                <a href="index.html">Inicio</a>
+                <a href="autos.html">Nuestros Autos</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">Servicios</a>
+                    <div class="dropdown-content">
+                        <a href="mantenimiento.html">🔧 Mantenimiento</a>
+                        <a href="montallantas.html">🚗 Montallantas</a>
+                        <a href="alineacion.html">⚖️ Alineación</a>
+                    </div>
+                </div>
+                <a href="contacto.html">Contacto</a>
+            </nav>
+        </div>
+
+        <!-- Capa de contenido -->
+        <div class="content">
+            <h2 class="page-title">🚙 Nuestra Flota de Vehículos</h2>
+            <p class="page-description">
+                Descubre nuestra amplia selección de vehículos modernos y confiables. 
+                Cada auto ha sido cuidadosamente seleccionado para ofrecerte la mejor experiencia de conducción.
+                <strong>🚀 Pasa el mouse sobre cada imagen para ver más detalles del vehículo.</strong>
+            </p>
+            
+            <div style="text-align: center; margin-bottom: 30px; padding: 15px; background: rgba(52, 152, 219, 0.1); border-radius: 10px; border: 2px dashed rgba(52, 152, 219, 0.3);">
+                <p style="margin: 0; color: #2c3e50; font-weight: 600;">
+                    💡 <strong>Consejo:</strong> Pasa el cursor sobre cualquier parte de la tarjeta del vehículo para ver información técnica detallada
+                </p>
+            </div>
+
+            <div class="gallery">
+                <!-- Auto 1 -->
+                <div class="car-item">
+                    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&h=300&fit=crop" 
+                         alt="Chevrolet Camaro" 
+                         class="car-image"
+                         onmouseover="showDetails('car1')"
+                         onmouseout="hideDetails('car1')">
+                    
+                    <div class="car-info">
+                        <h3 class="car-name">Chevrolet Camaro</h3>
+                        <p class="car-description">
+                            Deportivo americano con potencia excepcional y diseño agresivo. 
+                            Perfecto para quienes buscan adrenalina y estilo.
+                        </p>
+                        <div class="car-features">
+                            <span class="feature-tag">Deportivo</span>
+                            <span class="feature-tag">Automático</span>
+                            <span class="feature-tag">A/C</span>
+                        </div>
+                        <div class="car-price">$120/día</div>
+                        <button class="rent-button">Reservar Ahora</button>
+                    </div>
+
+                    <!-- Capa de detalles que se muestra con OnMouseOver -->
+                    <div class="car-details" id="car1">
+                        <h3>Chevrolet Camaro</h3>
+                        <p>El Camaro representa la esencia del muscle car americano con tecnología moderna.</p>
+                        <div class="specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Motor</div>
+                                <div class="spec-value">V8 6.2L</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Potencia</div>
+                                <div class="spec-value">455 HP</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Transmisión</div>
+                                <div class="spec-value">Automática</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Combustible</div>
+                                <div class="spec-value">Gasolina</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto 2 -->
+                <div class="car-item">
+                    <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=500&h=300&fit=crop" 
+                         alt="BMW X5" 
+                         class="car-image"
+                         onmouseover="showDetails('car2')"
+                         onmouseout="hideDetails('car2')">
+                    
+                    <div class="car-info">
+                        <h3 class="car-name">BMW X5</h3>
+                        <p class="car-description">
+                            SUV de lujo que combina elegancia, tecnología y versatilidad. 
+                            Ideal para viajes familiares y de negocios.
+                        </p>
+                        <div class="car-features">
+                            <span class="feature-tag">SUV</span>
+                            <span class="feature-tag">Lujo</span>
+                            <span class="feature-tag">4x4</span>
+                        </div>
+                        <div class="car-price">$150/día</div>
+                        <button class="rent-button">Reservar Ahora</button>
+                    </div>
+
+                    <!-- Capa de detalles que se muestra con OnMouseOver -->
+                    <div class="car-details" id="car2">
+                        <h3>BMW X5</h3>
+                        <p>El X5 establece el estándar para los SUV de lujo con su combinación de rendimiento y comodidad.</p>
+                        <div class="specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Motor</div>
+                                <div class="spec-value">3.0L Turbo</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Potencia</div>
+                                <div class="spec-value">335 HP</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Tracción</div>
+                                <div class="spec-value">4x4</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Capacidad</div>
+                                <div class="spec-value">7 pasajeros</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auto 3 -->
+                <div class="car-item">
+                    <img src="https://images.unsplash.com/photo-1582639510494-c80b5de9f148?w=500&h=300&fit=crop" 
+                         alt="Toyota Corolla" 
+                         class="car-image"
+                         onmouseover="showDetails('car3')"
+                         onmouseout="hideDetails('car3')">
+                    
+                    <div class="car-info">
+                        <h3 class="car-name">Toyota Corolla</h3>
+                        <p class="car-description">
+                            Sedán compacto confiable y económico. Excelente para uso diario 
+                            y viajes urbanos con bajo consumo de combustible.
+                        </p>
+                        <div class="car-features">
+                            <span class="feature-tag">Económico</span>
+                            <span class="feature-tag">Confiable</span>
+                            <span class="feature-tag">Automático</span>
+                        </div>
+                        <div class="car-price">$80/día</div>
+                        <button class="rent-button">Reservar Ahora</button>
+                    </div>
+
+                    <!-- Capa de detalles que se muestra con OnMouseOver -->
+                    <div class="car-details" id="car3">
+                        <h3>Toyota Corolla</h3>
+                        <p>El Corolla es sinónimo de confiabilidad y eficiencia, perfecto para el uso diario.</p>
+                        <div class="specs">
+                            <div class="spec-item">
+                                <div class="spec-label">Motor</div>
+                                <div class="spec-value">2.0L</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Potencia</div>
+                                <div class="spec-value">169 HP</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Transmisión</div>
+                                <div class="spec-value">CVT</div>
+                            </div>
+                            <div class="spec-item">
+                                <div class="spec-label">Consumo</div>
+                                <div class="spec-value">6.5L/100km</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funciones para mostrar/ocultar capas con eventos OnMouseOver y OnMouseOut
+        function showDetails(carId) {
+            const details = document.getElementById(carId);
+            if (details) {
+                details.style.opacity = '1';
+                details.style.visibility = 'visible';
+            }
+        }
+
+        function hideDetails(carId) {
+            const details = document.getElementById(carId);
+            if (details) {
+                details.style.opacity = '0';
+                details.style.visibility = 'hidden';
+            }
+        }
+
+        // Manejo del menú desplegable
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            
+            // Solo el botón "Servicios" abre/cierra el menú
+            dropdownToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                dropdownContent.classList.toggle('show');
+                dropdown.classList.toggle('active');
+            });
+            
+            // Los enlaces del menú funcionan normalmente
+            const dropdownLinks = dropdownContent.querySelectorAll('a');
+            dropdownLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // No prevenir el comportamiento por defecto para que funcione la navegación
+                    dropdownContent.classList.remove('show');
+                    dropdown.classList.remove('active');
+                });
+            });
+            
+            // Cerrar menú al hacer click fuera
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    dropdownContent.classList.remove('show');
+                    dropdown.classList.remove('active');
+                }
+            });
+
+            // Eventos para las tarjetas de vehículos con hover estable
+            const carItems = document.querySelectorAll('.car-item');
+            
+            carItems.forEach((item, index) => {
+                const carId = `car${index + 1}`;
+                const details = item.querySelector('.car-details');
+                
+                if (details) {
+                    let isHovered = false;
+                    let hoverTimeout;
+                    
+                    // Eventos para el contenedor completo del auto
+                    item.addEventListener('mouseenter', function(e) {
+                        clearTimeout(hoverTimeout);
+                        isHovered = true;
+                        showDetails(carId);
+                    });
+                    
+                    item.addEventListener('mouseleave', function(e) {
+                        isHovered = false;
+                        // Pequeño delay para evitar parpadeo accidental
+                        hoverTimeout = setTimeout(() => {
+                            if (!isHovered) {
+                                hideDetails(carId);
+                            }
+                        }, 50);
+                    });
+                    
+                    // Eventos adicionales para mayor estabilidad
+                    item.addEventListener('mousemove', function(e) {
+                        if (isHovered) {
+                            clearTimeout(hoverTimeout);
+                            showDetails(carId);
+                        }
+                    });
+                    
+                    // Prevenir que se oculte si el mouse está sobre los detalles
+                    details.addEventListener('mouseenter', function() {
+                        clearTimeout(hoverTimeout);
+                        isHovered = true;
+                    });
+                    
+                    details.addEventListener('mouseleave', function() {
+                        isHovered = false;
+                        hoverTimeout = setTimeout(() => {
+                            if (!isHovered) {
+                                hideDetails(carId);
+                            }
+                        }, 50);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
